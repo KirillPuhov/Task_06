@@ -15,8 +15,8 @@ public class Main {
         float e = input("Введите e: ");
 
         System.out.println(calculateSumTerms(n, x));
-        System.out.println(calculateSumTermsMoreE(n, x, e));
-        System.out.println(calculateSumTermsMoreEDivTen(n, x, e));
+        System.out.println(calculateSumTermsMore(e, false, n, x));
+        System.out.println(calculateSumTermsMore(e, true, n, x));
         System.out.println(calculateOriginalExpression(x));
     }
 
@@ -44,34 +44,19 @@ public class Main {
         return sum;
     }
 
-    private static double calculateSumTermsMoreE(int n, double x, double e){
+    private static double calculateSumTermsMore(double e, boolean isEDivTen, int n, double x){
         int oddCounter = 0;
         double sum = 0;
+
+        double eValue = e;
+
+        if(isEDivTen)
+            eValue = e/10;
 
         for(int i = 0; i < n; i+=2){
             double expression = calculateNthElementValue(i, x);
 
-            if(Math.abs(expression) > e){
-                if(oddCounter % 2 == 0){
-                    sum += expression;
-                }else{
-                    sum -= expression;
-                }
-                oddCounter++;
-            }
-        }
-
-        return sum;
-    }
-
-    private static double calculateSumTermsMoreEDivTen(int n, double x, double e){
-        int oddCounter = 0;
-        double sum = 0;
-
-        for(int i = 0; i < n; i+=2){
-            double expression = calculateNthElementValue(i, x);
-
-            if(Math.abs(expression) > e/10){
+            if(Math.abs(expression) > eValue){
                 if(oddCounter % 2 == 0){
                     sum += expression;
                 }else{
