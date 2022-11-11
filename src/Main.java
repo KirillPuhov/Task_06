@@ -10,81 +10,69 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] argv){
-        float x = input("Введите x: ");
+        double x = input("Введите x: ");
         int n = (int)input("Введите n: ");
-        float e = input("Введите e: ");
+        double e = input("Введите e: ");
 
-        System.out.println(calculateSumTerms(n, x));
-        System.out.println(calculateSumTermsMore(e, false, n, x));
-        System.out.println(calculateSumTermsMore(e, true, n, x));
-        System.out.println(calculateOriginalExpression(x));
+        printResult(x, n, e);
     }
 
-    public static float input(String text){
+    public static double input(String text){
         Scanner scanner = new Scanner(System.in);
         System.out.print(text);
-        return scanner.nextInt();
+        return scanner.nextDouble();
     }
 
-    private static double calculateSumTerms(int n, double x){
-        int oddCounter = 0;
-        double sum = 0;
+    public static void printResult(double x, int n, double e){
+        double sumItem = 0;
+        double sumItemMoreAbsolute = 0;
+        double sumItemMoreAbsoluteDivided10 = 0;
 
-        for(int i = 0; i < n; i+=2){
-            double expression = calculateNthElementValue(i, x);
+        double current = 1;
+        double denominator = 1;
+        sumItem += current;
 
-            if(oddCounter % 2 == 0){
-                sum += expression;
-            }else{
-                sum -= expression;
+        if (Math.abs(current) > e) {
+            sumItemMoreAbsolute += current;
+        }
+        if (Math.abs(current) > e/10.0){
+            sumItemMoreAbsoluteDivided10 += current;
+        }
+        int i = 1;
+        int degree = 2;
+        int odd = -1;
+        while (true){
+            double numerator = Math.pow(x, degree);
+            denominator *= i;
+
+            if(i % 2 != 0 || denominator == 1.0){
+                i++;
+                continue;
             }
-            oddCounter++;
-        }
 
-        return sum;
-    }
+            current = numerator/denominator * odd;
 
-    private static double calculateSumTermsMore(double e, boolean isEDivTen, int n, double x){
-        int oddCounter = 0;
-        double sum = 0;
-
-        double eValue = e;
-
-        if(isEDivTen)
-            eValue = e/10;
-
-        for(int i = 0; i < n; i+=2){
-            double expression = calculateNthElementValue(i, x);
-
-            if(Math.abs(expression) > eValue){
-                if(oddCounter % 2 == 0){
-                    sum += expression;
-                }else{
-                    sum -= expression;
-                }
-                oddCounter++;
+            if (i <= n) {
+                sumItem += current;
             }
+            if (Math.abs(current) > e) {
+                sumItemMoreAbsolute += current;
+            }
+            if (Math.abs(current) > e/10.0){
+                sumItemMoreAbsoluteDivided10 += current;
+            }
+            if ( i >= n && Math.abs(current) < e/10.0){
+                break;
+            }
+            i++;
+            degree += 2;
+            odd *= -1;
         }
 
-        return sum;
-    }
+        System.out.println(sumItem);
+        System.out.println(sumItemMoreAbsolute);
+        System.out.println(sumItemMoreAbsoluteDivided10);
 
-    private static double calculateNthElementValue(int n, double x){
-        double numerator = Math.pow(x, n);
-        double denumerator = factorial(n);
-
-        return numerator / denumerator;
-    }
-
-    public static double factorial(double f) {
-        double result = 1;
-        for (double i = 1; i <= f; i++) {
-            result = result * i;
-        }
-        return result;
-    }
-
-    private static double calculateOriginalExpression(double x){
-        return Math.cos(x);
+        System.out.println(Math.cos(x));
     }
 }
